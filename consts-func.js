@@ -521,7 +521,7 @@ destrava2,
 tabela, 
 conselhob, 
 palavras, 
-colors,
+colors, 
 
 // FUNÇÃO... 
 

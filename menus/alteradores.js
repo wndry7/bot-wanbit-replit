@@ -23,7 +23,8 @@ return`
 ╎⩺ ${prefix}Bass (marca)
 ╎⩺ ${prefix}Bass2 (marca)
 ╎⩺ ${prefix}Vozmenino (marca)
-╰─────────────╯ 
+╎
+╰─────────────╯
 `
 }
 
