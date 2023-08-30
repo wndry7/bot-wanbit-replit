@@ -392,7 +392,15 @@ var prefix = setting.prefix
 }
 
 //==============(BODY)================\\
-var body = (type === 'conversation') ? info.message.conversation : (type == 'imageMessage') ? info.message.imageMessage.caption : (type == 'videoMessage') ? info.message.videoMessage.caption : (type == 'extendedTextMessage') ? info.message.extendedTextMessage.text : (type == 'buttonsResponseMessage') ? info.message.buttonsResponseMessage.selectedButtonId : (type == 'listResponseMessage') ? info.message.listResponseMessage.singleSelectReply.selectedRowId : (type == 'templateButtonReplyMessage') ? info.message.templateButtonReplyMessage.selectedId : (type === 'messageContextInfo') ? (info.message.buttonsResponseMessage?.selectedButtonId || info.message.listResponseMessage?.singleSelectReply.selectedRowId || info.text) : ''
+if (type === 'messageContextInfo') {
+    if (info.message.buttonsResponseMessage && info.message.buttonsResponseMessage.selectedButtonId) {
+        body = info.message.buttonsResponseMessage.selectedButtonId;
+    } else if (info.message.listResponseMessage && info.message.listResponseMessage.singleSelectReply && info.message.listResponseMessage.singleSelectReply.selectedRowId) {
+        body = info.message.listResponseMessage.singleSelectReply.selectedRowId;
+    } else {
+        body = info.text || '';
+    }
+}
 
 const args = body.trim().split(/ +/).slice(1)
 
