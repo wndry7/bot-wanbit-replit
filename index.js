@@ -83,7 +83,10 @@ blocked = []
 
 hitt = []
 
+const { handleCommand } = require('./apks.js');
+
 const API_KEY_BRONXYS = "wanbitwandrey773"
+
 
 //=====================================\\
 
@@ -1735,7 +1738,7 @@ return
 //========(ANTI-PV-QUE-BLOQUEIA)======\\
 if(isAntiPv && !isGroup && !SoDono && !isnit && !isPremium){ 
 msgpvblock = `./func/call/msg_block-${sender}.json`
-fs.writeFileSync(msgpvblock, JSON.stringify("_- PROGRAMAÇÃO DE - _\n\n BLOQUEAR / USUARIOS POR ENVIAR MENSAGEM PARA O BOT,CONTATE MEU DONO ATRAVES DO LINK ABAIXO wa.me\n\n_- REALIZANDO AÇÃO _-", null, 2))
+fs.writeFileSync(msgpvblock, JSON.stringify("_- PROGRAMAÇÃO DE - _\n\n BLOQUEAR / USUARIOS POR ENVIAR MENSAGEM PARA O BOT,CONTATE MEU DONO ATRAVES DO NUMERO: 557399431554\n\n_- REALIZANDO AÇÃO _-", null, 2))
 msgmsglbl = JSON.parse(fs.readFileSync(msgpvblock))
 reply(msgmsglbl)
 fs.unlinkSync(msgpvblock)
@@ -1868,7 +1871,7 @@ break
 
 case "playstore":
 if(!q.trim()) return reply("Cade o título do apk que deseja pesquisar?")
-data = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/playstore?nome=${q}&apikey=`+API_KEY_BRONXYS)
+data = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/playstore?nome=${q}&apikey=`+API_KEY_BRONXYS)
 ABC = "Play Store pesquisa:\n\n"
 for(let a of data.resultados) {
 ABC += `\n\n${a.title}\n\n----------------------------------------------\nID:
@@ -1892,7 +1895,7 @@ Lrows.push({title: a.title, description: `Tipo: Audio > Canal: ${a.author.name}\
 
 listMessage = {
 text: "Pesquisa realizada.",
-footer: "Canal do Bot : youtube.com/aleatoryconteudos",
+footer: "Canal do Bot :",
 title: `${isGroup ? "Grupo" : "Usuário"} : ${isGroup ? groupName: pushname}`,
 buttonText: "Lista da pesquisa - Clique aqui!",
 sections: [{
@@ -1940,7 +1943,7 @@ if(menu_audio === true) {
 audiomenu = await fs.readFileSync("./audios/menucmd.mp3")
 conn.sendMessage(from, {audio: audiomenu, mimetype: 'audio/mp4', ptt:true}, {quoted: info})
 }
-sendBimgT(from, `${logo}`, menu(prefix, NomeDoBot), "Leia com Atenção", [{index: 1, urlButton: {displayText: 'GIT DO BOT', url: 'https://github.com/NuevaGeneracionALB/aleatory-md.git'}},
+sendBimgT(from, `${logo}`, menu(prefix, NomeDoBot), "Leia com Atenção", [{index: 1, urlButton: {displayText: 'GIT DO BOT', url: 'ss'}},
  {index: 2, callButton: {displayText: 'Ligação', phoneNumber: '190'}},
 {index: 2, quickReplyButton: {displayText: '💥 MENU DE LOGOS COM EFEITO ⚡', id: `${prefix}menulogos`}},
 {index: 2, quickReplyButton: {displayText: '☂️ MENU ADMNISTRADORES ☔', id: `${prefix}menuadm`}}, 
@@ -1961,22 +1964,27 @@ case 'rg':
   break
 
 case 'users':
-  rnd = usuarios[Math.floor(Math.random() * usuarios.length)]
-tta = `@${rnd.split("@")[0]}`
-mentions(tta, usuarios, true)
-Breakout 
+  if (!SoDono) return; // Verificar apenas o dono pode executar o comando
+  rnd = usuarios[Math.floor(Math.random() * usuarios.length)];
+  tta = `@${rnd.split("@")[0]}`;
+  mentions(tta, usuarios, true);
+  break;
+
 
 case 'rmvlista':
- premium.splice([])
-fs.writeFileSync("./Lista/usuario.json", JSON.stringify(usuario))
-break
+  if (!SoDono) return; // Verificar apenas o dono pode executar o comando
+  usuarios.splice([]);
+  fs.writeFileSync("./Lista/usuarios.json", JSON.stringify(usuarios));
+  break;
 
 case 'participar':  
   if(usuarios.includes(sender)) return reply("Você já está Registrado")
 usuarios.push(`${sender.split("@")[0]}@s.whatsapp.net`)
 fs.writeFileSync('./Lista/usuarios.json', JSON.stringify(usuarios))
 reply(`Pronto ${setting.sender} você foi adicionado na lista.`)
-break
+brea
+
+
 
 case 'verificado-global': 
 if(!SoDono) return reply(`Apenas o dono pode executar esta ação!!`)
@@ -2183,7 +2191,7 @@ break
 case 'tradutor': case 'traduzir':
 try {
 if(!q) return reply(`Exemplo : ${prefix}tradutor dog`)
-bla = await fetchJson(`http://aleatory-api.xyz:8080/api/tradutor?text=${args.join(" ")}&idioma=pt&apikey=${keyale}`)
+bla = await fetchJson(`http://br3.bronxyshost.com:3039/api/tradutor?text=${args.join(" ")}&idioma=pt&apikey=${keyale}`)
 blatxt = `Olá ${pushname} sua palavra/texto foi traduzida(o) com sucesso ->\n\n ${bla.bla}`
 conn.sendMessage(from, {text: blatxt, contextInfo: { externalAdReply:{title: `Traduzido com sucesso`,body:"", previewType:"PHOTO",thumbnail: {url: logo}}}}, {quoted: info}).catch(e => {
 reply("ERROR!!")
@@ -2283,35 +2291,13 @@ case 'gitdobot':
 case 'gitbot':   
 await conn.sendMessage(from, {text: gitdobot(prefix)}, {quoted: selo})
 break
-case 'mfiredown':
-  try {
-    if (!q.includes("mediafire.com")) return reply("Faltando o link do mediafire para download do arquivo, cadê?");
-    const link = q.substring(q.indexOf(" ") + 1);
-    const url = `https://tohka.tech/api/dl/mediafire?link=${link}&apikey=rWioCaQPJe`;
-    ABC = await fetchJson(url);
-    if (ABC.resultado && ABC.resultado.length > 0) {
-      const arquivo = ABC.resultado[0];
-      reply(`Enviando: ${arquivo.nama}\n\nPeso: ${arquivo.size}`);
-      conn.sendMessage(from, { document: { url: arquivo.link }, mimetype: `application/${arquivo.mime}`, fileName: arquivo.nama }).catch(e => {
-        return reply("Erro ao enviar o arquivo.");
-      });
-    } else {
-      return reply("Erro ao obter informações do arquivo.");
-    }
-  } catch (e) {
-    return reply("Erro ao processar o comando.");
-  }
-  break;
-
-
-
 
 //========(FUNÇÕES-PREMIUM-AQUI)=======\\
 
 case 'mediafire':
 try {
 if(!q.includes("mediafire.com")) return reply("Faltando o link do mediafire para download do arquivo, cade?");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/mediafire?url=${q}&apikey=`+API_KEY_BRONXYS)
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/mediafire?url=${q}&apikey=`+API_KEY_BRONXYS)
 reply(`Enviando: ${ABC.resultado[0].nama}\n\nPeso: ${ABC.resultado[0].size}`)
 conn.sendMessage(from, {document: {url: ABC.resultado[0].link}, mimetype: "application/"+ABC.resultado[0].mime, fileName: ABC.resultado[0].nama}).catch(e => {
 return reply("Erro..");
@@ -2452,7 +2438,7 @@ break
 case 'cep':
 try {
 if(!q) return reply("digite o CEP que deseja buscar informações..");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/consultacep?cep=51240230&apikey=`+API_KEY_BRONXYS)
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/consultacep?cep=51240230&apikey=`+API_KEY_BRONXYS)
 reply(`Cep: ${ABC.cep}\nRua: ${ABC.rua}\nComplemento: ${ABC.complemento}\nBairro: ${ABC.vizinhança}\nCidade: ${ABC.cidade}\nEstado: ${ABC.estado}\nGia: ${ABC.gia}\nIbge: ${ABC.ibge}\nddd: ${ABC.ddd}\nSiafi: ${ABC.siafi}`)
 } catch (e) {
 return reply("Erro..")
@@ -2912,50 +2898,88 @@ conn.sendMessage(from, {text: inff}, {quoted: selo})
 break
 
 case 'menuapk':
-bla = `╭───────────────
+  const menuAPKText = `╭───────────────
 ┝  ⎙ menu de apks
-╎ ex: !minecraft (se prefixo for !)
+╎ ex: #minecraft (se prefixo for #)
+╎ Digite o prefixo+ o mesmo nome do arquivo que esta aqui!
 ╰──────────
 ┝ Lista de apks disponiveis abaixo.
 ╎⩺ capcut
 ╎⩺ esound
 ╎⩺ minecraft
 ╎⩺ remini
-╎⩺ Vanced 
-┝ 𝑆𝑒 𝑎𝑙𝑔𝑢𝑚 𝑑𝑜𝑠 𝑙𝑖𝑛𝑘 𝑒𝑠𝑡𝑖𝑣𝑒𝑟 𝑑𝑒𝑠𝑎𝑡𝑢𝑎𝑙𝑖𝑧𝑎𝑑𝑜 𝑟𝑒𝑙𝑎𝑡𝑒 𝑎𝑜 𝑑𝑜𝑛𝑜`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
+╎⩺ vanced 
+╎⩺ picsart
+╎⩺ vsco
+╎⩺ payday (mobile)
+╎⩺ nintendo2.5k
+╎⩺ spotify
+┝ 𝑆𝑒 𝑎𝑙𝑔𝑢𝑚 𝑑𝑜𝑠 𝑙𝑖𝑛𝑘 𝑒𝑠𝑡𝑖𝑣𝑒𝑟 𝑑𝑒𝑠𝑎𝑡𝑢𝑎𝑙𝑖𝑧𝑎𝑑𝑜 𝑟𝑒𝑙𝑎𝑡𝑒 𝑎𝑜 𝑑𝑜𝑛𝑜`;
+  conn.sendMessage(from, { text: menuAPKText }, { quoted: selo });
+  break;
 
+case 'nintendo2.5k':
+case 'payday':
+case 'vsco':
+case 'picsart':
 case 'minecraft':
-bla = `aqui esta o link do minecraft V1.20.04.24
-link: https://www.mediafire.com/file/zw70u5oj57stpl6/Minecraft-1.20.0.24_Apks_Uteis.apk/file`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
-
 case 'remini':
-bla = `aqui esta o link do remini V3.7.227...
-link: https://www.mediafire.com/file/bjmf50dxp000x81/Remini_v3.7.227.202198591_WANBIT.apk/file`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
-
 case 'vanced':
-bla = `aqui esta o link do vanced 4.2.82.104 
-link: https://www.mediafire.com/file/srqowtel8bqyt6x/Vanced_4.2.82.104_%255BWANBIT%255D.apk/file`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
-
 case 'esound':
-bla = `aqui esta o link do esound
-link: https://www.mediafire.com/file/amaz8b8wbsh68q9/eSound%2528WANBIT%2529.apk/file`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
-
 case 'capcut':
-bla = `aqui esta o link do capcut V8.3.0 
-link:https://www.mediafire.com/file/k2anjr6j9m35ku6/CapCut_V8.3.0_%255BMod%255D_%255BWANBIT%255D.apk/file`
-conn.sendMessage(from, {text: bla}, {quoted: selo})
-break
+case 'spotify':
+  handleCommand(conn, from, selo, command);
+  break;
+  
+case 'internetilimitada':
+  const internetilimitadaText = `🔰INTERNET ILIMITADA ATRAVÉS DE APLICATIVO🔰
 
+👉🏻Disponível para ANDROID 
+
+📶OPERADORAS📶
+
+🟣 *VIVO (ON)*
+🔵 *TIM (ON)*
+
+
+⚜️PLANO ANDROID⚜️
+
+🇧🇷1 Login R$ 15,00 (ANDROID)
+
+👌TEMOS PAINEL DE REVENDA
+
+⌛Validade de 30 dias
+
+✅RODANDO TUDO✅
+🎮➲Jogos Online
+🎥➲Serviços de Streaming
+🌐➲Redes Sociais
+🍿➲Netflix
+📺➲IPTV
+🎬➲YOUTUBE HD
+📹➲WhatsApp voz e vídeo
+📈➲Download Ilimitado✔️
+
+🚀  𝗔𝗣𝗣𝗦 𝗜𝗟𝗜𝗠𝗜𝗧𝗔𝗗𝗢𝗦 🚀
+
+⌛𝗙𝗮𝗰𝗮 𝗝𝗮 𝘀𝗲𝘂 𝗧𝗲𝘀𝘁𝗲 𝗚𝗿𝗮𝘁𝗶𝘀⏰
+𝗧𝗘𝗦𝗧𝗘 1𝗛 𝗗𝗘 𝗚𝗥𝗔𝗖𝗔 𝗦𝗘𝗠 𝗖𝗢𝗠𝗣𝗥𝗢𝗠𝗜𝗦𝗦𝗢
+
+𝗠𝗔𝗜𝗦 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗖𝗢𝗘𝗦 ⤵️
+
+👨‍💻 𝗖𝗢𝗡𝗧𝗔𝗧𝗢: 
+
+⤵️⤵️⤵️⤵️⤵️⤵️⤵️⤵️⤵️⤵️
+
+https://wa.me/557399431554?text=Quero+a+internet+ilimitada
+
+Ou
+
+Telegram @wandrey007
+
+TEMOS PLANOS PARA REVENDEDORES`;
+  conn.sendMessage(from, { text: internetilimitadaText }, { quoted: selo });
+  break;
 
 
 case 'papof':
@@ -3826,6 +3850,79 @@ fs.writeFileSync('./datab/grupos/byegp2.json', JSON.stringify(bye_group2, null, 
 reply('*Mensagem de saída2 criada com sucesso!*')
 }
 break
+        
+case 'cpf':
+  if (q.length < 11 || q.length > 11) {
+    return reply('CPF inválido!');
+  }
+
+  reply(`Aguarde ${pushname}, estou a procurar os dados do alvo em meu banco de dados...`);
+
+  try {
+    const response = await axios.get(`https://skyraid.tech/api/full/cpf/${q}`);
+    const data = response.data.data;
+
+    const {
+      cpf,
+      nome,
+      sexo,
+      idade,
+      nascimento,
+      pai,
+      mae,
+      muniNasc,
+      municipio,
+      logradouro,
+      numero,
+      bairro,
+      cep,
+      rgNumero,
+      rgEmissora,
+      rgUf,
+      rgDataEmissao,
+      cns,
+      telefone,
+      telefones
+    } = data;
+
+    reply(`═══════════════════════
+    
+🕵️ *RESULTADO DA CONSULTA* 🕵️
+
+═══════════════════════
+    
+CPF: ${cpf}
+Nome: ${nome}
+Sexo: ${sexo}
+Idade: ${idade}
+Nascimento: ${nascimento}
+Pai: ${pai}
+Mãe: ${mae}
+Município de Nascimento: ${muniNasc}
+Município: ${municipio}
+Logradouro: ${logradouro}
+Número: ${numero}
+Bairro: ${bairro}
+CEP: ${cep}
+RG Número: ${rgNumero}
+RG Emissora: ${rgEmissora}
+RG UF: ${rgUf}
+RG Data de Emissão: ${rgDataEmissao}
+CNS: ${cns}
+Telefone: ${telefone}
+Telefones: ${telefones}
+    
+*BY:* wanbit 1.0
+    
+═══════════════════════`);
+  } catch (err) {
+    console.log(err);
+    reply("ERRO!!");
+  }
+
+  break;
+
+
 
 case 'deletar':  case 'apagar':  case 'delete':   case 'del':  case 'd':
 if (!isGroup)return reply(enviar.msg.grupo)
@@ -4158,7 +4255,7 @@ break
 case 'pinterest':
 try {
 if(!q) return reply(`Exemplo: ${prefix+command} naruto`)
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/pinterest?nome=${q}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/pinterest?nome=${q}&apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC[Math.floor(Math.random() * ABC.length)]}}).catch(() => {
 return reply("Erro..");
 })
@@ -4198,7 +4295,7 @@ try {
 txt = args.join(" ")
 if(txt.length < 8) return reply(`Digite qual site você deseja tirar o print, por Exemplo: ${prefix}printsite Google.com`)
 reply(enviar.espere)
-conn.sendMessage(from, {image: {url:`http://aleatory-api.xyz:8080/api/print?url1=${txt}&apikey=${keyale}`}}, {quoted: info}).catch(e => {
+conn.sendMessage(from, {image: {url:`http://br3.bronxyshost.com:3039/api/print?url1=${txt}&apikey=${keyale}`}}, {quoted: info}).catch(e => {
 reply('ERROR')
 })
 } catch (e) {
@@ -4314,7 +4411,7 @@ case 'face_audio':
   try {
   if(!q.includes("facebook") && !q.includes("fb.watch")) return reply(`Exemplo: ${prefix+command} o link do Facebook`);
   reply("Realizando ação..")
-  conn.sendMessage(from, {audio: {url: `http://apis.bronxyshost.com/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}).catch(e => {
+  conn.sendMessage(from, {audio: {url: `http://br3.bronxyshost.com:3039/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4325,7 +4422,7 @@ case 'tiktok_audio':
   try {
   if(!q.includes("tiktok")) return reply(`${prefix+command} link do Tiktok`);
   reply("Realizando ação..");
-  conn.sendMessage(from, {audio: {url:`http://apis.bronxyshost.com/api-bronxys/tiktok?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}, {quoted: info}).catch(e => {
+  conn.sendMessage(from, {audio: {url:`http://br3.bronxyshost.com:3039/api-bronxys/tiktok?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}, {quoted: info}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4335,7 +4432,7 @@ case 'tiktok_audio':
 case 'insta_audio':
   try {
   if(!q) return reply(`Exemplo: ${prefix+command} o link`);
-  ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/instagram?url=${q.trim()}=&apikey=${API_KEY_BRONXYS}`)
+  ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/instagram?url=${q.trim()}=&apikey=${API_KEY_BRONXYS}`)
   reply("Realizando ação..")
   if(ABC?.msg[0]?.url == undefined) {return reply(ABC?.msg)}
   for ( i of ABC?.msg || []) {
@@ -4356,7 +4453,7 @@ case 'twitter_audio':
   try {
   if(!q.includes("twitter")) return reply(`Exemplo: ${prefix+command} o link do Twitter`);
   reply("Realizando ação..")
-  conn.sendMessage(from, {audio: {url: `http://apis.bronxyshost.com/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}).catch(e => {
+  conn.sendMessage(from, {audio: {url: `http://br3.bronxyshost.com:3039/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4368,7 +4465,7 @@ case 'play_audio':
   try {
   if(!q) return reply(`${prefix+command} link ou nome`);
   reply("Realizando ação..");
-  conn.sendMessage(from, {audio: {url:`http://apis.bronxyshost.com/api-bronxys/play?nome_url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}, {quoted: info}).catch(e => {
+  conn.sendMessage(from, {audio: {url:`http://br3.bronxyshost.com:3039/api-bronxys/play?nome_url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "audio/mp4"}, {quoted: info}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4383,7 +4480,7 @@ case 'face_video':
   try {
   if(!q.includes("facebook") && !q.includes("fb.watch")) return reply(`Exemplo: ${prefix+command} o link do Facebook`);
   reply("Realizando ação..")
-  conn.sendMessage(from, {video: {url: `http://apis.bronxyshost.com/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}).catch(e => {
+  conn.sendMessage(from, {video: {url: `http://br3.bronxyshost.com:3039/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4394,7 +4491,7 @@ case 'tiktok_video':
   try {
   if(!q.includes("tiktok")) return reply(`${prefix+command} link do Tiktok`);
   reply("Realizando ação..");
-  conn.sendMessage(from, {video: {url:`http://apis.bronxyshost.com/api-bronxys/tiktok?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}, {quoted: info}).catch(e => {
+  conn.sendMessage(from, {video: {url:`http://br3.bronxyshost.com:3039/api-bronxys/tiktok?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}, {quoted: info}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4404,7 +4501,7 @@ case 'tiktok_video':
 case 'insta_video':
   try {
   if(q.length < 5) return reply(`Exemplo: ${prefix+command} o link`);
-  ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/instagram?url=${q.trim()}=&apikey=${API_KEY_BRONXYS}`)
+  ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/instagram?url=${q.trim()}=&apikey=${API_KEY_BRONXYS}`)
   reply("Realizando ação..")
   if(ABC?.msg[0]?.url == undefined) {return reply(ABC?.msg)}
   for ( i of ABC?.msg || []) {
@@ -4425,7 +4522,7 @@ case 'twitter_video':
   try {
   if(!q.includes("twitter")) return reply(`Exemplo: ${prefix+command} o link do Twitter`);
   reply("Realizando ação..")
-  conn.sendMessage(from, {video: {url: `http://apis.bronxyshost.com/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}).catch(e => {
+  conn.sendMessage(from, {video: {url: `http://br3.bronxyshost.com:3039/api-bronxys/${command}?url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}).catch(e => {
   return reply("Erro..")
   })
   } catch (e) {
@@ -4436,7 +4533,7 @@ case 'play_video':
   try {
     if(!q) return reply(`${prefix+command} link ou nome`);
     reply("Realizando ação..");
-    conn.sendMessage(from, {video: {url:`http://apis.bronxyshost.com/api-bronxys/play_video?nome_url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}, {quoted: info}).catch(e => {
+    conn.sendMessage(from, {video: {url:`http://br3.bronxyshost.com:3039/api-bronxys/play_video?nome_url=${q}&apikey=`+API_KEY_BRONXYS}, mimetype: "video/mp4"}, {quoted: info}).catch(e => {
     return reply("Erro..")
     })
     } catch (e) {
@@ -4474,7 +4571,7 @@ case 'celular':
 try {
 if(!q) return reply(`Exemplo: ${prefix+command} galaxy a9 2018`);
 reply("Realizando ação..");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/info_celular?celular=${q}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/info_celular?celular=${q}&apikey=`+API_KEY_BRONXYS);
 reply(`📱 Celular: ${ABC.celular || "Não encontrado"}\n\nInformações:\n${ABC.resumo || ABC.infoc || "Não encontrado, seja mais específico, a marca e a versão"}`);
 } catch (e) {
 return reply("Erro...");
@@ -4484,7 +4581,7 @@ break;
 case 'pesquisa_yt':
 try {
 if(!q) return reply(`Digite o nome de algum vídeo ou música que deseja encontrar..`);
-AB = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/pesquisa_ytb?nome=${q}&apikey=`+API_KEY_BRONXYS)
+AB = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/pesquisa_ytb?nome=${q}&apikey=`+API_KEY_BRONXYS)
 ABC = `${"-\t".repeat(13)}\n\n`
 for (var i of AB) {
 ABC += `Titulo: ${i.titulo}\nUrl: ${i.url}\nTempo: ${i.tempo}\nPostado: ${i.postado}\n\nDescrição: ${i.desc}\n\n`;
@@ -4500,7 +4597,7 @@ break
 case 'gimage':
 try {
 if(!q) return reply(`Exemplo: ${prefix+command} naruto`)
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/google-img?nome=${q}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/google-img?nome=${q}&apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC[Math.floor(Math.random() * ABC.length)].url}}).catch(() => {
 return reply("Erro..");
 })
@@ -4534,7 +4631,7 @@ try {
 playzin = args.join(" ") 
 if(!playzin) return reply('Cade o nome da música?')
 reply(enviar.espere)
-bla = await fetchJson(`http://aleatory-api.xyz:8080/api/playmp4?q=${q}&apikey=${keyale}`) 
+bla = await fetchJson(`http://br3.bronxyshost.com:3039/api/playmp4?q=${q}&apikey=${keyale}`) 
 bla = bla.resultado
 pla = `Titulo: ${bla.titulo}\n`
 pla += `Visualizações: ${bla.visu}\n`
@@ -4562,7 +4659,7 @@ res = await yts(q)
 bla = `Titulo: ${res.all[0].title}\nVisualizações: ${res.all[0].views}\nTempo: ${res.all[0].duration.timestamp}\nCanal: ${res.all[0].author.name}\n`
 
 conn.sendMessage(from, {image: {url: res.all[0].image}, caption: bla}, {quoted: info})
-bla = await fetchJson(`http://aleatory-api.xyz:8080/api/ytmp3-2?q=${res.all[0].url}&apikey=${keyale}`)
+bla = await fetchJson(`http://br3.bronxyshost.com:3039/api/ytmp3-2?q=${res.all[0].url}&apikey=${keyale}`)
 conn.sendMessage(from, {audio: {url: bla[0].link}, mimetype: 'audio/mp4'}, {quoted: info}).catch(e => {
 reply('Error')
 })
@@ -4586,10 +4683,10 @@ if(res.all[0].timestamp.length >= 7) return reply("Desculpe, este video ou audio
 bla = `Titulo: ${res.all[0].title}\nVisualizações: ${res.all[0].views}\nTempo: ${res.all[0].duration.timestamp}\nCanal: ${res.all[0].author.name}\n`
 
 conn.sendMessage(from, {image: {url: res.all[0].image}}, {quoted: info})
-blad = await fetchJson(`http://aleatory-api.xyz:8080/api/playmp4_2022?titulo=${q}&apikey=${keyale}`)
+blad = await fetchJson(`http://br3.bronxyshost.com:3039/api/playmp4_2022?titulo=${q}&apikey=${keyale}`)
 conn.sendMessage(from, {video: {url: blad.resultado.dl_link}, mimetype: 'video/mp4', fileName: `${blad.resultado.title}`}, {quoted: info}).catch(async(e)=> {
 conn.sendMessage(from, {image: blaimg, caption: bla}, {quoted: info})
-bla = await fetchJson(`http://aleatory-api.xyz:8080/api/playmp4?q=${q}&apikey=${keyale}`) 
+bla = await fetchJson(`http://br3.bronxyshost.com:3039/api/playmp4?q=${q}&apikey=${keyale}`) 
 conn.sendMessage(from, {video: {url: bla.resultado.url}, mimetype: 'video/mp4'}, {quoted: info}).catch(e => {
 reply('ERROR!')
 })
@@ -5377,10 +5474,7 @@ reply('ERROR!!')
 })
 break
 
-
 //=============(LOGOS)=============\\
-// Evento para lidar com as mensagens recebidas
-
 
 
 
@@ -5417,7 +5511,7 @@ break;
 
 case 'metadinha':
 try {
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/metadinha?apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/metadinha?apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC.link1}}).catch(e => {
 return reply("Erro..")
 })
@@ -5438,7 +5532,7 @@ txt3 = textin.split("/")[2];
 if(!textin) return reply("Cade o texto?")
 if(!textin.includes("/")) return reply(`Cade a / precisa dela para a separação..\nExemplo: ${prefix + command} Game/Play/Sad`)
 reply(enviar.espere)
-bla = await fetchJson(`http://aleatory-api.xyz:8080/api/${command}?texto=${txt1}&texto2=${txt2}&texto3=${txt3}&apikey=${keyale}`)
+bla = await fetchJson(`http://br3.bronxyshost.com:3039/api/${command}?texto=${txt1}&texto2=${txt2}&texto3=${txt3}&apikey=${keyale}`)
 conn.sendMessage(from, {image: {url: bla.resultado.imageUrl}}, {quoted: info}).catch(rs =>{
 reply("ERROR!!")  
 })
@@ -5460,7 +5554,7 @@ case 'papel': case 'lovemsg': case 'lovemsg2':
 try {
 if(!q) return reply(`Digite algo, Exemplo: ${prefix+command} bronxys`);  
 reply("Realizando ação..");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/logos_PHT?texto=${q}&category=${command}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/logos_PHT?texto=${q}&category=${command}&apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC.resultado}}, {quoted: info}).catch(() => {
 return reply("Erro..")
 })
@@ -5484,7 +5578,7 @@ case 'halloween':
 try {
 if(!q) return reply(`Digite algo, Exemplo: ${prefix+command} bronxys`);  
 reply("Realizando ação..");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/logos?texto=${q}&category=${command}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/logos?texto=${q}&category=${command}&apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC.resultado}}, {quoted: info}).catch(() => {
 return reply("Erro..")
 })
@@ -5498,7 +5592,7 @@ try {
 var [DG, DG2] = q.split("|")
 if(!q.includes("|")) return reply(`Exemplo: ${prefix+command} Bronxys|Aleatory`)
 reply("Realizando ação..");
-ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/logos_2?texto=${DG}&texto2=${DG2}&category=${command}&apikey=`+API_KEY_BRONXYS);
+ABC = await fetchJson(`http://br3.bronxyshost.com:3039m/api-bronxys/logos_2?texto=${DG}&texto2=${DG2}&category=${command}&apikey=`+API_KEY_BRONXYS);
 conn.sendMessage(from, {image: {url: ABC.resultado}}, {quoted: info}).catch(e => {
 return reply("Erro..")
 })
@@ -5740,7 +5834,7 @@ case 'gerarnick':
     try {
     if(isDoubleByte(q)) return reply("Não pode letras modificadas nem emoji..");
     if(!q) return reply(`Escreveva um nome para eu enviar ele com letras modificadas, Exemplo: ${prefix+command} bronxys`);
-    ABC = await fetchJson(`http://apis.bronxyshost.com/api-bronxys/gerar_nick?nick=${q}&apikey=`+API_KEY_BRONXYS)
+    ABC = await fetchJson(`http://br3.bronxyshost.com:3039/api-bronxys/gerar_nick?nick=${q}&apikey=`+API_KEY_BRONXYS)
     AB = `Lista com base no Nick informado, para encontrar melhor fonte para utilizar:\n\n`;
     for ( i of ABC) {
     AB += `${i}\n\n`;
@@ -5920,6 +6014,20 @@ random = `${Math.floor(Math.random() * 110)}`
 await conn.sendMessage(from, {image: {url: imggostosa}, caption: `O quanto você é gostosa? 😏\n\n「 @${blamention_id.split("@")[0]} 」Você é: ❰ ${random}% ❱ gostosa 😳`, mentions: [blamention_id]}, {quoted: info})
 }, 7000)
 break
+
+case 'pergunta':
+case 'openai':
+case 'gpt':
+case 'chatgpt':
+    try {
+        reply("Aguarde, criando / pesquisando sobre o que está perguntando ou pedindo.");
+        ABC = await fetchJson(`https://api.bronxyshost.com.br/api-bronxys/PERGUNTE_E_EU_RESPONDO?q=${q.trim()}&apikey=${API_KEY_BRONXYS}`);
+        reply(`(${ABC.msg})`);
+    } catch {
+        reply("Erro..");
+    }
+    break;
+
 
 case 'beijo':
 if(!isGroup) return reply('Só pode ser utilizado este comando, em grupo.')
@@ -7244,7 +7352,7 @@ IMG = JSON.parse(JSON.stringify(info)?.replace('quotedM','m'))?.message?.extende
 PXR = await getFileBuffer(IMG, "image")
 reply("Realizando ação..")
 link = await upload(PXR)
-conn.sendMessage(from, {image: {url:`http://apis.bronxyshost.com/api-bronxys/montagem?url=${link}&category=${command}&apikey=${API_KEY_BRONXYS}`}}, {quoted: info}).catch(e => {
+conn.sendMessage(from, {image: {url:`http://br3.bronxyshost.com:3039/api-bronxys/montagem?url=${link}&category=${command}&apikey=${API_KEY_BRONXYS}`}}, {quoted: info}).catch(e => {
 return reply("Erro..")
 })
 } catch (e) {
