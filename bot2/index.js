@@ -616,7 +616,8 @@ var selo = info
 }
 //=====================================\\
 
-const menc_prt = info.message?.extendedTextMessage?.contextInfo?.participant
+const menc_prt = info.message?.extendedTextMessage?.contextInfo?.participant;
+
 
 const menc_jid = args.join(" ").replace("@", "") + "@s.whatsapp.net"
 
